@@ -1,0 +1,29 @@
+{
+  "name": "@itemconsulting/xp-storybook",
+  "version": "0.0.1",
+  "description": "Preset for using Storybook with Enonic XP",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
+  "author": "Tom Arild Jakobsen <tajakobsen@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@enonic-types/core": "^7",
+    "@storybook/server": "^7",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0"
+  }
+}
