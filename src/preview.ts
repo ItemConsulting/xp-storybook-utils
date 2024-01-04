@@ -1,5 +1,7 @@
 import type { Parameters } from "@storybook/server";
 
+export type { Preview } from "@storybook/server";
+
 export function createPreviewServerParams(matchers: {
   zonedDateTime?: RegExp;
   localDateTime?: RegExp;
