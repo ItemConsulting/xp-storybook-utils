@@ -1,18 +1,41 @@
 # Utilities for Storybook Server integration with Enonic XP
 
-Helper library for using Storybook with Enonic XP. This library helps you prepare the data from your stories before sending it to the [Storybook XP-application](https://github.com/ItemConsulting/xp-storybook/).
+Helper library for using Storybook with Enonic XP. This library helps you prepare the data from your stories before 
+sending it to the [Storybook XP-application](https://github.com/ItemConsulting/xp-storybook/).
+
+The XP-Storybook-app helps you test your [Freemarker-templates](https://market.enonic.com/vendors/tineikt/freemarker-xp-library), 
+your **CSS** and your **frontend JavaScript**. It does not help you test any serverside JavaScript!
+
+You can mount the templates for your Parts, Layouts and Pages to create stories. Or you can use inline templates which
+can import [Freemarker Macros](https://freemarker.apache.org/docs/ref_directive_macro.html) to create stories for 
+individual components/partial-templates.
 
 [![npm version](https://badge.fury.io/js/@itemconsulting%2Fxp-storybook-utils.svg)](https://badge.fury.io/js/@itemconsulting%2Fxp-storybook-utils)
 
 ## Installation
 
-### Install the package
-
-Use npm to install the package:
-
-```bash
-npm i --save-dev @itemconsulting/xp-storybook-utils
-```
+1. Install the [xp-storybook](https://github.com/ItemConsulting/xp-storybook)-application in your local XP sandbox.
+2. Install [Storybook-server](https://github.com/storybookjs/storybook/tree/next/code/renderers/server) in your XP-project
+   ```bash
+   npx storybook@latest init --type server
+   rm -r src/stories
+   ```
+3. Install this package and [preset-enonic-xp](https://github.com/ItemConsulting/preset-enonic-xp).
+   ```bash
+   npm i --save-dev @itemconsulting/xp-storybook-utils @itemconsulting/preset-enonic-xp
+   ```
+4. Add _preset-enonic-xp_ to `addons` in *.storybook/main.ts*
+   ```diff
+   import type { StorybookConfig } from "@storybook/server-webpack5";
+   const config: StorybookConfig = {
+     addons: [
+       "@storybook/addon-links", 
+       "@storybook/addon-essentials",
+   +   "@itemconsulting/preset-enonic-xp"
+     ],
+   };
+   export default config;
+   ```
 
 ### Create an environment file
 
@@ -45,7 +68,9 @@ and value is a regex that will be run on keys of the `args` from your stories.
 import { createPreviewServerParams, type Preview } from "@itemconsulting/xp-storybook-utils";
 
 if(!process.env.STORYBOOK_SERVER_URL) {
-  throw Error(`You need to create a file named ".env" with "STORYBOOK_SERVER_URL" in it. Then restart storybook.`)
+  throw Error(
+    `Create a file named ".env" with "STORYBOOK_SERVER_URL". Then restart storybook.`
+  );
 }
 
 const preview: Preview = {
