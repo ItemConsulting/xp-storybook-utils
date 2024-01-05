@@ -20,7 +20,7 @@ individual components/partial-templates.
    npx storybook@latest init --type server
    rm -r src/stories
    ```
-3. Install this package and [preset-enonic-xp](https://github.com/ItemConsulting/preset-enonic-xp).
+3. Install this package and [preset-enonic-xp](https://github.com/ItemConsulting/preset-enonic-xp) in your project.
    ```bash
    npm i --save-dev @itemconsulting/xp-storybook-utils @itemconsulting/preset-enonic-xp
    ```
