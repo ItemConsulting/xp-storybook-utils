@@ -5,13 +5,10 @@ export type RenderOnServerParams = {
   layout?: "padded" | "fullscreen" | "centered";
   javaTypes?: Record<string, "string" | "zonedDateTime" | "localDateTime" | "number" | "region">;
   template?: string;
-  view?: string;
-  filePath?: string;
+  id?: string;
 
-  [key: ComponentDescriptor]: string;
+  [key: ComponentDescriptor]: string | { template: string };
 };
-
-const FILE_PATH_HASH_PARAM = "?hash=";
 
 export function renderOnServer(params: RenderOnServerParams | string): Parameters {
   if (typeof params === "string") {
@@ -24,53 +21,17 @@ export function renderOnServer(params: RenderOnServerParams | string): Parameter
     };
   }
 
-  const { javaTypes, layout, view, ...serverParams } = params;
-
-  const result: Record<string, string> = serverParams;
-  const filePath = serverParams.filePath ?? view;
-
-  if (filePath) {
-    result.filePath = cleanFilePath(filePath);
-  }
-
-  if (javaTypes) {
-    result.javaTypes = JSON.stringify(javaTypes);
-  }
-
-  Object.keys(params)
-    .filter(isComponentDescriptor)
-    .forEach((componentDescriptor) => {
-      const value = params[componentDescriptor];
-      serverParams[componentDescriptor] = JSON.stringify(
-        isFilePath(value)
-          ? {
-              filePath: cleanFilePath(value),
-            }
-          : {
-              template: value,
-              filePath: params.view ? cleanFilePath(params.view) : undefined,
-            },
-      );
-    });
+  const { layout, id, ...serverParams } = params;
 
   return {
     layout: layout ?? "padded",
     server: {
-      params: serverParams,
+      id,
+      params: Object.keys(serverParams).reduce<Record<string, string>>((res, key) => {
+        const value = serverParams[key as ComponentDescriptor];
+        res[key] = typeof value === "string" ? value : JSON.stringify(value);
+        return res;
+      }, {}),
     },
   };
-}
-
-function isFilePath(value: string): boolean {
-  return value.includes(FILE_PATH_HASH_PARAM);
-}
-
-function isComponentDescriptor(str: String): str is ComponentDescriptor {
-  return str.indexOf(":") !== -1;
-}
-
-function cleanFilePath(filePath: string): string {
-  const index = filePath.indexOf("?");
-
-  return index === -1 ? filePath : filePath.substring(0, index);
 }
