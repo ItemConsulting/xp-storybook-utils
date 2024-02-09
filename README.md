@@ -44,7 +44,7 @@ the root directory of your project. You need to configure the path to the servic
 with the `STORYBOOK_SERVER_URL` variable.
 
 ```dotenv
-STORYBOOK_SERVER_URL=http://localhost:8080/_/service/no.item.storybook/freemarker-preview
+STORYBOOK_SERVER_URL=http://localhost:8080/_/service/no.item.storybook/storybook-preview
 ```
 
 > [!TIP]
