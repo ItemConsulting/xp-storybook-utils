@@ -134,8 +134,8 @@ We prefer to have our _stories.{ts,js}_-files together with the XP-components th
 ### Story for a part
 
 ```typescript
-import view from "./article-header.ftl"; // 1
-import { renderOnServer, type Meta, type StoryObj } from "@itemconsulting/xp-storybook-utils";
+import id from "./article-header.ftl"; // 1
+import type { Meta, StoryObj } from "@itemconsulting/xp-storybook-utils";
 import "./article-header.css"; // 2
 
 type FreemarkerParams = {
@@ -147,10 +147,10 @@ type FreemarkerParams = {
 
 const meta: Meta<FreemarkerParams> = {
   title: "Part/Article Header",
-  parameters: renderOnServer({
+  parameters: {
     layout: "centered", // 3
-    view, // 4
-  }),
+    server: { id }, // 4
+  },
 };
 
 export default meta;
@@ -167,10 +167,10 @@ export const articleHeader: StoryObj<FreemarkerParams> = { // 5
 ```
 
 1. We import the template-file we want to test in the story. The addon [preset-enonic-xp](https://github.com/ItemConsulting/preset-enonic-xp)
-   provides support for __*.ftl__-files. The value of `view` is your local path on disk to ftl-file
+   provides support for __*.ftl__/__*.html__-files. The value of `id` is your local path on disk to template-file relative to the resource-directory.
 2. We can import css-files used by the story
 3. It's possible to change Storybooks layout (legal values are: `"padded"` (default), `"fullscreen"`, `"centered"`).
-4. We pass in the `view` to tell the _xp-storybook_-app which local file it should use to render the story.
+4. We pass in the `id` to tell the _xp-storybook_-app which local file it should use to render the story.
 5. When we create a story object we can pass in a type that defines the shape of data the ftl-file expects. If you are
    writing your controller in TypeScript, you can use this type both in the controller and the story.
 6. If _preview.ts_ is configured like above `publishedDate` will give a date picker-input in Storybook, but be parsed
@@ -180,7 +180,7 @@ export const articleHeader: StoryObj<FreemarkerParams> = { // 5
 ### Story for a partial template
 
 ```typescript
-import view from "./accordion.ftl";
+import id from "./accordion.ftl";
 import { renderOnServer, type Meta, type StoryObj } from "@itemconsulting/xp-storybook-utils";
 import "./accordion.css";
 
@@ -199,7 +199,7 @@ const meta: Meta<FreemarkerParams> = {
       [#import "/site/views/partials/accordion/accordion.ftl" as a]
       [@a.accordion id=id items=items /]
     `, // 1
-    view, // 2
+    id, // 2
   }),
 };
 
@@ -226,7 +226,8 @@ export const Accordion: StoryObj<FreemarkerParams> = {
    into the view directly – because that would be like having a function that is never called.
    We can instead define an **inline template** using the `template` property. This _inline template_ can import the macro 
    we want to test and call it with the correct parameters.
-2. We are still passing in the `view`, because it is used to locate the file (with the macro) on your local machine.
+2. It is optional to pass in the `id`, but the file extension can be used as a hint to the `renderMode`. It's important to 
+   import the `id` from the file, because it gives a hint to Webpack to reload the preview when the file changes.
 
 ### Story for a layout or page
 
@@ -236,9 +237,9 @@ This can even be used to compose a story containing an entire page, as it would 
 
 ```typescript
 import { renderOnServer, hideControls, type Meta, type StoryObj } from "@itemconsulting/xp-storybook-utils";
-import view from "./default.ftl";
-import layout1ColView from "../../layouts/layout-1-col/layout-1-col.ftl";
-import articleHeaderView from "../../parts/article-header/article-header.ftl";
+import id from "./default.ftl";
+import layout1ColId from "../../layouts/layout-1-col/layout-1-col.ftl";
+import articleHeaderId from "../../parts/article-header/article-header.ftl";
 import { articleHeader } from "../../parts/article-header/article-header.stories"; // 1
 import "../../../assets/styles/main.css";
 
@@ -255,9 +256,9 @@ const meta: Meta = {
   },
   parameters: renderOnServer({
     layout: "fullscreen",
-    view,
-    "com.example:layout-1-col": layout1ColView, // 3
-    "com.example:article-header": articleHeaderView,
+    id,
+    "com.example:layout-1-col": layout1ColId, // 3
+    "com.example:article-header": articleHeaderId,
     "com.example:echo": "<h2>${title}</h2>", // 4
   }),
 };
@@ -350,7 +351,7 @@ a string version of this value should be deserialized into.
 This is a more fine-grained version of the same mechanism use in `createPreviewServerParams()`.  
 
 ```typescript
-import view from "./timeline.ftl";
+import id from "./timeline.ftl";
 import { renderOnServer, type Meta, type StoryObj } from "@itemconsulting/storybook-xp";
 
 type FreemarkerParams = {
@@ -361,7 +362,7 @@ type FreemarkerParams = {
 const meta: Meta<FreemarkerParams> = {
   title: "Part/Timeline",
   parameters: renderOnServer({
-    view,
+    id,
     javaTypes: { // 1
       startYear: "number",
       endYear: "number",
