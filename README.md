@@ -36,6 +36,15 @@ individual components/partial-templates.
    };
    export default config;
    ```
+5. Add import support for _*.ftl_ and _*.html_ files by adding the `global` types from this library to the `types` array 
+   under `compilerOptions` in _tsconfig.json_
+   ```json
+   {
+	   "compilerOptions": {
+       "types": ["@itemconsulting/xp-storybook-utils/global"]
+     }
+   }
+   ```
 
 ### Create an environment file
 
