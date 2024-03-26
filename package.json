@@ -1,6 +1,6 @@
 {
   "name": "@itemconsulting/xp-storybook-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Preset for using Storybook with Enonic XP",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,9 +18,9 @@
   "license": "MIT",
   "devDependencies": {
     "@enonic-types/core": "^7",
-    "@storybook/server": "^7",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@storybook/server": "^8",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
