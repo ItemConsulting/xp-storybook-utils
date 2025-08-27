@@ -3,7 +3,7 @@ import type { Parameters } from "@storybook/server";
 
 export type RenderOnServerParams = {
   layout?: "padded" | "fullscreen" | "centered";
-  javaTypes?: Record<string, "string" | "zonedDateTime" | "localDateTime" | "number" | "region">;
+  javaTypes?: Record<string, "string" | "localDate" | "zonedDateTime" | "localDateTime" | "number" | "region">;
   template?: string;
   id?: string;
 
