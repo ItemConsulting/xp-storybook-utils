@@ -20,14 +20,14 @@
   "author": "Tom Arild Jakobsen <tajakobsen@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.29.6",
+    "@changesets/cli": "^2.29.7",
     "@enonic-types/core": "^7",
-    "@storybook/server": "^9",
-    "eslint": "^9.34.0",
+    "@storybook/server": "^10",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.41.0"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0"
   }
 }
