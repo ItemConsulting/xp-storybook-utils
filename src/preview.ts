@@ -1,6 +1,6 @@
-import type { Parameters } from "@storybook/server";
+import type { Parameters } from "@storybook/server/dist";
 
-export type { Preview } from "@storybook/server";
+export type { Preview } from "@storybook/server/dist";
 
 export function createPreviewServerParams(matchers: {
   localDate?: RegExp;

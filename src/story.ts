@@ -1,5 +1,5 @@
 import type { ComponentDescriptor } from "@enonic-types/core";
-import type { Parameters } from "@storybook/server";
+import type { Parameters } from "@storybook/server/dist";
 
 export type RenderOnServerParams = {
   layout?: "padded" | "fullscreen" | "centered";
