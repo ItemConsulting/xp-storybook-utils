@@ -1,6 +1,6 @@
 {
   "name": "@itemconsulting/xp-storybook-utils",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Preset for using Storybook with Enonic XP",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

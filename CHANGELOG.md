@@ -1,5 +1,12 @@
 # @itemconsulting/xp-storybook-utils
 
+## 0.3.0
+
+### Minor Changes
+
+- 00dbded: Use moduleResolution=bundler in tsconfig.json
+- 2d0238c: Expose DEFAULT_XP_SERVER constant that can be used to configure Storybook in most XP-projects
+
 ## 0.2.0
 
 ### Minor Changes
