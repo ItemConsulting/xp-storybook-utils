@@ -1,7 +1,7 @@
-import type { Args } from "@storybook/server/dist";
-import type { StoryObj as ServerStoryObj } from "@storybook/server/dist";
+import type { Args } from "@storybook/server";
+import type { StoryObj as ServerStoryObj } from "@storybook/server";
 
-export type { Meta } from "@storybook/server/dist";
+export type { Meta } from "@storybook/server";
 
 type DateTimeLike = {
   getDayOfMonth(): number;
