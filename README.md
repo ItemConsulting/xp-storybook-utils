@@ -3,11 +3,11 @@
 Helper library for using Storybook with Enonic XP. This library helps you prepare the data from your stories before 
 sending it to the [Storybook XP-application](https://github.com/ItemConsulting/xp-storybook/).
 
-The XP-Storybook-app helps you test your [Freemarker-templates](https://market.enonic.com/vendors/tineikt/freemarker-xp-library), 
+The XP-Storybook-app helps you test your [FreeMarker-templates](https://market.enonic.com/vendors/tineikt/freemarker-xp-library), 
 your **CSS** and your **frontend JavaScript**. It does not help you test any serverside JavaScript!
 
-You can mount the templates for your Parts, Layouts and Pages to create stories. Or you can use inline templates which
-can import [Freemarker Macros](https://freemarker.apache.org/docs/ref_directive_macro.html) to create stories for 
+You can mount the templates for your _Parts_, _Layouts_ and _Pages_ to create stories. Or you can use inline templates which
+can import [FreeMarker Macros](https://freemarker.apache.org/docs/ref_directive_macro.html) to create stories for 
 individual components/partial-templates.
 
 [![npm version](https://badge.fury.io/js/@itemconsulting%2Fxp-storybook-utils.svg)](https://badge.fury.io/js/@itemconsulting%2Fxp-storybook-utils)
@@ -46,65 +46,46 @@ individual components/partial-templates.
    }
    ```
 
-### Create an environment file
+### Expose the _webapp_ path in the vhost config
 
-You should create an [environment file](https://storybook.js.org/docs/configure/environment-variables) named _.env_ in 
-the root directory of your project. You need to configure the path to the service exposed by the Storybook XP-application 
-with the `STORYBOOK_SERVER_URL` variable.
+The **rendering endpoint** will be exposed at http://localhost:8080/webapp/no.item.storybook.
+If you have enabled local vhost routing through _com.enonic.xp.web.vhost.cfg_, you need to create a mapping that exposes
+the _webapp_ endpoints:
 
-```dotenv
-STORYBOOK_SERVER_URL=http://localhost:8080/_/service/no.item.storybook/storybook-preview
+```ini
+enabled = true
+
+mapping.webapp.host = localhost
+mapping.webapp.source = /webapp
+mapping.webapp.target = /webapp
+mapping.webapp.idProvider.system = default
 ```
-
-> [!TIP]
-> You can add the _.env_ file to your _.gitignore_ file, so that each developer can have their own local setup
 
 ### Configuring the preview
 
 In _.storybook/preview.{ts,js}_ we can create a configuration common for all stories.
 
-You must provide Storybook with the `url` of the XP-service that can be used for server-rendering. We recommend using
-the environment variable in `process.env.STORYBOOK_SERVER_URL` configured in the previous chapter.
-
-And you can also (optionally) use `createPreviewServerParams()` to set up naming conventions that will ensure that 
-[`args`](https://storybook.js.org/docs/writing-stories/args) are automatically deserialized into correct Java-classes 
-serverside. 
-
-It takes an `object` where the key is the _data-type-name_ (see the chapter _Keys and their corresponding Java-class_) 
-and value is a regex that will be run on keys of the `args` from your stories.
+You can use **DEFAULT_XP_SERVER** to use the default server configuration when integrating with the [Enonic XP 
+Storybook-application](https://market.enonic.com/vendors/item-consulting-as/storybook).
 
 ```typescript
-import { createPreviewServerParams, type Preview } from "@itemconsulting/xp-storybook-utils";
+import { DEFAULT_XP_SERVER, type Preview } from "@itemconsulting/xp-storybook-utils";
 
-if(!process.env.STORYBOOK_SERVER_URL) {
-  throw Error(
-    `Create a file named ".env" with "STORYBOOK_SERVER_URL". Then restart storybook.`
-  );
-}
-
-const preview: Preview = {
+export default {
   parameters: {
-    server: {
-      url: process.env.STORYBOOK_SERVER_URL,
-      params: createPreviewServerParams({
-        zonedDateTime: /Date$/,
-        region: /Region$/i
-      })
-    },
+    server: DEFAULT_XP_SERVER,
     controls: {
       matchers: {
         date: /Date$/,
       },
     },
   },
-};
-
-export default preview;
+} satisfies Preview;
 ```
 
-In this example we are telling the XP-application that we want all arg keys that **end with** `"Date"` to be parsed as
-`java.time.ZonedDateTime` before being passed to the template. We are also saying that every arg key that ends with
-`"Region"` should be treated as a `com.enonic.xp.region.Region`.
+The default server config will make it so that the keys in `args` ending with `Date` or `Time` will be deserialized as 
+the java class `java.time.ZonedDateTime` and `args` ending with `Region` will be deserialized as  
+`com.enonic.xp.region.Region`.
 
 > [!TIP]
 > We recommend the wonderful [lib-time](https://github.com/ItemConsulting/lib-xp-time) if you need to work with dates in Enonic XP-projects.
@@ -154,15 +135,13 @@ type FreemarkerParams = {
   locale: string;
 }
 
-const meta: Meta<FreemarkerParams> = {
+export default  {
   title: "Part/Article Header",
   parameters: {
     layout: "centered", // 3
     server: { id }, // 4
   },
-};
-
-export default meta;
+} satisfies  Meta<FreemarkerParams>;
 
 export const articleHeader: StoryObj<FreemarkerParams> = { // 5
   name: "Article Header",
