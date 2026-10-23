@@ -1,4 +1,3 @@
-import type { ComponentDescriptor } from "@enonic-types/core";
 import type { Parameters } from "@storybook/server";
 
 export type RenderOnServerParams = {
@@ -7,7 +6,7 @@ export type RenderOnServerParams = {
   template?: string;
   id?: string;
 
-  [key: ComponentDescriptor]: string | { template: string };
+  [key: `${string}:${string}`]: string | { template: string };
 };
 
 export function renderOnServer(params: RenderOnServerParams | string): Parameters {
@@ -28,7 +27,7 @@ export function renderOnServer(params: RenderOnServerParams | string): Parameter
     server: {
       id,
       params: Object.keys(serverParams).reduce<Record<string, string>>((res, key) => {
-        const value = serverParams[key as ComponentDescriptor];
+        const value = serverParams[key as `${string}:${string}`];
         res[key] = typeof value === "string" ? value : JSON.stringify(value);
         return res;
       }, {}),

@@ -1,14 +1,16 @@
 export type { Preview } from "@storybook/server";
 
-declare const process: { env?: { RESOURCES_DIR?: string; APP_NAME?: string } } | undefined;
+declare const process: { env?: { APP_NAME?: string } } | undefined;
 
-export const DEFAULT_XP_SERVER_URL = "http://localhost:8080/webapp/no.item.storybook";
+export const DEFAULT_XP_SERVER_URL = "http://localhost:8080/api/no.item.storybook:preview";
 
 export const DEFAULT_XP_SERVER = {
   url: DEFAULT_XP_SERVER_URL,
   params: {
-    xpResourcesDirPath: process?.env?.RESOURCES_DIR,
-    xpAppName: process?.env?.APP_NAME,
+    // Only send this when it is actually set. URLSearchParams stringifies an undefined value to the
+    // literal "undefined", which the server would then treat as a real application name — and its
+    // "missing xpAppName" error says more than a lookup of an application called "undefined" would.
+    ...(process?.env?.APP_NAME && { xpAppName: process.env.APP_NAME }),
     matchers: JSON.stringify({
       zonedDateTime: /Date$|Time$/i.toString(),
       region: /Region$/i.toString(),

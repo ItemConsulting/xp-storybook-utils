@@ -3,7 +3,7 @@
 Helper library for using Storybook with Enonic XP. This library helps you prepare the data from your stories before 
 sending it to the [Storybook XP-application](https://github.com/ItemConsulting/xp-storybook/).
 
-The XP-Storybook-app helps you test your [FreeMarker-templates](https://market.enonic.com/vendors/tineikt/freemarker-xp-library), 
+The XP-Storybook-app helps you test your [FreeMarker-templates](https://github.com/ItemConsulting/lib-xp-freemarker), 
 your **CSS** and your **frontend JavaScript**. It does not help you test any serverside JavaScript!
 
 You can mount the templates for your _Parts_, _Layouts_ and _Pages_ to create stories. Or you can use inline templates which
@@ -15,6 +15,8 @@ individual components/partial-templates.
 ## Installation
 
 1. Install the [xp-storybook](https://github.com/ItemConsulting/xp-storybook)-application in your local XP sandbox.
+   No configuration is needed: the app renders only when XP runs in development mode, which is the
+   default for `enonic sandbox start`.
 2. Install [Storybook-server](https://github.com/storybookjs/storybook/tree/next/code/renderers/server) in your XP-project
    ```bash
    npx storybook@latest init --type server
@@ -27,38 +29,39 @@ individual components/partial-templates.
 4. Add _preset-enonic-xp_ to `addons` in *.storybook/main.ts*
    ```diff
    import type { StorybookConfig } from "@storybook/server-webpack5";
-   const config: StorybookConfig = {
+   
+   export default {
      addons: [
        "@storybook/addon-links", 
        "@storybook/addon-essentials",
    +   "@itemconsulting/preset-enonic-xp"
      ],
-   };
-   export default config;
+   } satisfies StorybookConfig;
    ```
-5. Add import support for _*.ftl_ and _*.html_ files by adding the `global` types from this library to the `types` array 
-   under `compilerOptions` in _tsconfig.json_
+5. Add import support for _*.ftl_ and _*.html_ files by adding the types from
+   [`@itemconsulting/storybook-framework-enonic-xp`](https://github.com/ItemConsulting/storybook-framework-enonic-xp)
+   to the `types` array under `compilerOptions` in _tsconfig.json_
    ```json
    {
 	   "compilerOptions": {
-       "types": ["@itemconsulting/xp-storybook-utils/global"]
+       "types": ["@itemconsulting/storybook-framework-enonic-xp"]
      }
    }
    ```
 
-### Expose the _webapp_ path in the vhost config
+### Expose the _api_ path in the vhost config
 
-The **rendering endpoint** will be exposed at http://localhost:8080/webapp/no.item.storybook.
+The **rendering endpoint** is exposed at http://localhost:8080/api/no.item.storybook:preview.
 If you have enabled local vhost routing through _com.enonic.xp.web.vhost.cfg_, you need to create a mapping that exposes
-the _webapp_ endpoints:
+the _api_ endpoint:
 
 ```ini
 enabled = true
 
-mapping.webapp.host = localhost
-mapping.webapp.source = /webapp
-mapping.webapp.target = /webapp
-mapping.webapp.idProvider.system = default
+mapping.api.host = localhost
+mapping.api.source = /api
+mapping.api.target = /api
+mapping.api.idProvider.system = default
 ```
 
 ### Configuring the preview
@@ -141,7 +144,7 @@ export default  {
     layout: "centered", // 3
     server: { id }, // 4
   },
-} satisfies  Meta<FreemarkerParams>;
+} satisfies Meta<FreemarkerParams>;
 
 export const articleHeader: StoryObj<FreemarkerParams> = { // 5
   name: "Article Header",
@@ -214,8 +217,9 @@ export const Accordion: StoryObj<FreemarkerParams> = {
    into the view directly – because that would be like having a function that is never called.
    We can instead define an **inline template** using the `template` property. This _inline template_ can import the macro 
    we want to test and call it with the correct parameters.
-2. It is optional to pass in the `id`, but the file extension can be used as a hint to the `renderMode`. It's important to 
-   import the `id` from the file, because it gives a hint to Webpack to reload the preview when the file changes.
+2. Pass in the `id`. An inline template has no file extension of its own, and the extension of the requested path is
+   what decides whether FreeMarker or Thymeleaf renders it — so without an `id` the story falls back to FreeMarker.
+   Importing the `id` from the file also lets the bundler reload the preview when that file changes.
 
 ### Story for a layout or page
 
